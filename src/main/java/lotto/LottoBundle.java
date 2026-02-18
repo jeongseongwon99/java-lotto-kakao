@@ -45,7 +45,6 @@ public class LottoBundle {
         if (purchasePlan == null) {
             throw new IllegalArgumentException("구매 계획은 null일 수 없습니다.");
         }
-
         if (lottoGenerator == null) {
             throw new IllegalArgumentException("로또 생성기는 null일 수 없습니다.");
         }
@@ -56,6 +55,20 @@ public class LottoBundle {
             lottos.add(lottoGenerator.generate());
         }
         return new LottoBundle(lottos);
+    }
+
+    private static long calculatePurchasableCount(Money money) {
+        if (money == null) {
+            throw new IllegalArgumentException("구매금액은 null일 수 없습니다.");
+        }
+
+        long count = money.calculatePurchasableCount(Lotto.PRICE);
+        if (count <= 0L) {
+            throw new IllegalArgumentException(
+                    String.format("구매금액은 로또 가격 이상이어야 합니다. 로또 가격 : %d", Lotto.PRICE)
+            );
+        }
+        return count;
     }
 
     private void validate(List<Lotto> lottos) {
