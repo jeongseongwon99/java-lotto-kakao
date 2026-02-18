@@ -1,13 +1,11 @@
 package lotto;
 
-import money.Money;
-
+import java.util.Set;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class Lotto {
     public static final long PRICE = 1000L;
@@ -37,18 +35,8 @@ public class Lotto {
         return result;
     }
 
-    static int numberCount() {
+    public static int numberCount() {
         return LENGTH;
-    }
-
-    public static long calculatePurchasableCount(Money money) {
-        long count = money.calculatePurchasableCount(PRICE);
-        if (count <= 0L) {
-            throw new IllegalArgumentException(
-                    String.format("구매금액은 로또 가격 이상이어야 합니다. 로또 가격 : %d", PRICE)
-            );
-        }
-        return count;
     }
 
     private void validate(Set<LottoNumber> lottoNumberSet) {
@@ -59,9 +47,9 @@ public class Lotto {
         }
     }
 
-    public int matchCount(Lotto win) {
+    public int matchCount(Lotto otherLotto) {
         Set<LottoNumber> intersection = new HashSet<>(lottoNumberSet);
-        intersection.retainAll(win.lottoNumberSet);
+        intersection.retainAll(otherLotto.lottoNumberSet);
 
         return intersection.size();
     }
@@ -74,11 +62,6 @@ public class Lotto {
         return sortedNumbers;
     }
 
-    @Override
-    public String toString() {
-        return this.numbers().toString();
-    }
-
     public boolean contains(LottoNumber number) {
         return lottoNumberSet.contains(number);
     }
@@ -89,3 +72,4 @@ public class Lotto {
         return List.copyOf(list);
     }
 }
+

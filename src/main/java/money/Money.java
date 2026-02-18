@@ -51,14 +51,6 @@ public final class Money {
         return value;
     }
 
-    public long value() {
-        return value;
-    }
-
-    public long value() {
-        return value;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;

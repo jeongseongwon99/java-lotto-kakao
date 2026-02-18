@@ -36,20 +36,4 @@ public record LottoNumber(int value) implements Comparable<LottoNumber> {
         }
         return List.copyOf(allNumbers);
     }
-
-    private static List<LottoNumber> createAllNumbers() {
-        List<LottoNumber> allNumbers = new ArrayList<>();
-        for (int value = MIN; value <= MAX; value++) {
-            allNumbers.add(new LottoNumber(value));
-        }
-        return List.copyOf(allNumbers);
-    }
-
-    private static List<LottoNumber> createAllNumbers() {
-        List<LottoNumber> allNumbers = new ArrayList<>();
-        for (int value = MIN; value <= MAX; value++) {
-            allNumbers.add(new LottoNumber(value));
-        }
-        return List.copyOf(allNumbers);
-    }
 }
