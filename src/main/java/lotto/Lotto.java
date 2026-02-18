@@ -2,7 +2,12 @@ package lotto;
 
 import money.Money;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Lotto {
     public static final long PRICE = 1000L;
