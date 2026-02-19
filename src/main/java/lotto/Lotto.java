@@ -30,7 +30,7 @@ public class Lotto {
     private static Set<LottoNumber> convert(List<Integer> numbers) {
         Set<LottoNumber> result = new HashSet<>();
         for (Integer number : numbers) {
-            result.add(new LottoNumber(number));
+            result.add(LottoNumber.from(number));
         }
         return result;
     }
@@ -72,4 +72,3 @@ public class Lotto {
         return List.copyOf(list);
     }
 }
-

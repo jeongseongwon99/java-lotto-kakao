@@ -96,7 +96,7 @@ public class LottoController {
                 Lotto lotto = new Lotto(InputParser.parseLottoFormat(rawLotto));
 
                 String rawBonus = inputView.readBonusNumber();
-                LottoNumber bonus = new LottoNumber(InputParser.parseBonusNumberFormat(rawBonus));
+                LottoNumber bonus = LottoNumber.from(InputParser.parseBonusNumberFormat(rawBonus));
 
                 return new WinLotto(bonus, lotto);
             } catch (Exception e) {
