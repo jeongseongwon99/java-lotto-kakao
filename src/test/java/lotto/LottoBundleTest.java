@@ -83,7 +83,7 @@ public class LottoBundleTest {
     @Test
     void buyLottoBundleByPurchasePlanWithInjectedGenerator() {
         Lotto manualLotto = new Lotto(8, 21, 23, 41, 42, 43);
-        PurchasePlan purchasePlan = PurchasePlan.from(Money.won(3000), List.of(manualLotto));
+        PurchasePlan purchasePlan = PurchasePlan.from(Money.won(3000), 1);
         Lotto fixedLotto = new Lotto(1, 2, 3, 4, 5, 6);
         LottoGenerator fixedGenerator = new LottoGenerator() {
             @Override
@@ -92,7 +92,7 @@ public class LottoBundleTest {
             }
         };
 
-        LottoBundle lottoBundle = LottoBundle.buy(purchasePlan, fixedGenerator);
+        LottoBundle lottoBundle = LottoBundle.buy(purchasePlan, List.of(manualLotto), fixedGenerator);
 
         assertThat(lottoBundle.size()).isEqualTo(3);
         assertThat(lottoBundle.asList()).isEqualTo(List.of(manualLotto, fixedLotto, fixedLotto));

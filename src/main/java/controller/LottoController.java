@@ -23,8 +23,12 @@ public class LottoController {
         long totalCount = calculateTotalCount(money);
         int manualCount = readManualCountUntilValid(totalCount);
         List<Lotto> manualLottos = readManualLottosUntilValid(manualCount);
-        PurchasePlan purchasePlan = PurchasePlan.from(money, manualLottos);
-        LottoBundle lottoBundle = LottoBundle.buy(purchasePlan);
+        PurchasePlan purchasePlan = PurchasePlan.from(money, manualCount);
+        LottosGenerator lottosGenerator = new CompositeLottosGenerator(List.of(
+                new ManualLottosGenerator(manualLottos),
+                new AutoLottosGenerator(purchasePlan.getAutoCount(), new LottoGenerator())
+        ));
+        LottoBundle lottoBundle = lottosGenerator.generate();
         outputView.printPurchasedLottos(purchasePlan, lottoBundle);
         WinLotto win = readWinLotto();
         LottoBundleResult lottoBundleResult = lottoBundle.evaluate(win);
@@ -44,7 +48,7 @@ public class LottoController {
     }
 
     private long calculateTotalCount(Money money) {
-        return PurchasePlan.from(money, List.of()).getTotalCount();
+        return PurchasePlan.from(money, 0).getTotalCount();
     }
 
     private int readManualCountUntilValid(long totalCount) {
@@ -69,7 +73,7 @@ public class LottoController {
 
     private Money parseMoneyOrThrow(String rawMoney) {
         Money money = Money.won(InputParser.parseMoney(rawMoney));
-        PurchasePlan.from(money, List.of());
+        PurchasePlan.from(money, 0);
         return money;
     }
 

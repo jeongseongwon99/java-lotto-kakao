@@ -5,6 +5,7 @@ import money.Money;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class LottoBundle {
     private final List<Lotto> lottos;
@@ -33,33 +34,42 @@ public class LottoBundle {
     }
 
     static LottoBundle buy(Money money, LottoGenerator lottoGenerator) {
-        PurchasePlan purchasePlan = PurchasePlan.from(money, List.of());
-        return buy(purchasePlan, lottoGenerator);
+        PurchasePlan purchasePlan = PurchasePlan.from(money, 0);
+        return buy(purchasePlan, List.of(), lottoGenerator);
     }
 
-    public static LottoBundle buy(PurchasePlan purchasePlan) {
-        return buy(purchasePlan, new LottoGenerator());
-    }
-
-    static LottoBundle buy(PurchasePlan purchasePlan, LottoGenerator lottoGenerator) {
+    static LottoBundle buy(PurchasePlan purchasePlan, List<Lotto> manualLottos, LottoGenerator lottoGenerator) {
         if (purchasePlan == null) {
             throw new IllegalArgumentException("구매 계획은 null일 수 없습니다.");
         }
-        if (lottoGenerator == null) {
-            throw new IllegalArgumentException("로또 생성기는 null일 수 없습니다.");
+        if (manualLottos == null) {
+            throw new IllegalArgumentException("수동 로또 목록은 null일 수 없습니다.");
         }
-
-        List<Lotto> lottos = new ArrayList<>(purchasePlan.getManualLottos());
-        long count = purchasePlan.getAutoCount();
-        for (long c = 0; c < count; c++) {
-            lottos.add(lottoGenerator.generate());
+        if (purchasePlan.getManualCount() != manualLottos.size()) {
+            throw new IllegalArgumentException("수동 구매 수량과 수동 로또 목록의 크기가 일치하지 않습니다.");
         }
-        return new LottoBundle(lottos);
+        LottosGenerator lottosGenerator = new CompositeLottosGenerator(List.of(
+                new ManualLottosGenerator(manualLottos),
+                new AutoLottosGenerator(purchasePlan.getAutoCount(), lottoGenerator)
+        ));
+        return lottosGenerator.generate();
     }
 
     private void validate(List<Lotto> lottos) {
-        if (lottos == null || lottos.contains(null)) {
+        if (lottos == null) {
             throw new IllegalArgumentException("로또 묶음에 null이 포함될 수 없습니다.");
+        }
+        validateElements(lottos);
+    }
+
+    private void validateElements(List<Lotto> lottos) {
+        final String message = "로또 묶음에 null이 포함될 수 없습니다.";
+        try {
+            for (Lotto lotto : lottos) {
+                Objects.requireNonNull(lotto, message);
+            }
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException(message);
         }
     }
 
